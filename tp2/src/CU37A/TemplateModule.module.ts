@@ -3,6 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Template } from './Template.entity';
 import { TemplateService } from './templateService.service';
 import { CU37AController } from './CU37A.controller';
+import { ReportModule } from './ReportModule.module';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Template])],

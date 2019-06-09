@@ -19,14 +19,15 @@ export class ObservationNote {
   @Column()
   state: string;
   @Column()
-  redactionStart: Date;
+  redactionStart: string;
   @Column()
-  redactionEnd: Date;
+  redactionEnd: string;
   @Column()
-  correctionStart: Date;
+  correctionStart: string;
   @Column()
-  correctionEnd: Date;
+  correctionEnd: string;
 
-  @ManyToOne(type => Report, report => report.observationsNote)
+  @OneToOne(type => Report)
+  @JoinColumn()
   report: Report;
 }
