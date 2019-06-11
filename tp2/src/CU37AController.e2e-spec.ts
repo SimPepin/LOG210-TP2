@@ -7,43 +7,15 @@ import { Service } from './CU37A/Service.entity';
 import { Template } from 'src/CU37A/Template.entity';
 import { TemplateModule } from './CU37A/TemplateModule.module';
 import { AppModule } from './app.module';
+import serveStatic = require('serve-static');
 
 describe('CU37AController test', () => {
   let cu37AController: CU37AController;
   let templateService: TemplateService;
 
-  /*beforeEach(async () => {
-    const module = await Test.createTestingModule({
-      controllers: [CU37AController],
-      providers: [TemplateService],
-    }).compile();
-
-    templateService = module.get<TemplateService>(TemplateService);
-    cu37AController = module.get<CU37AController>(CU37AController);
-  });
-
-  describe('post complete', () => {
-    it('should return 200 ok', async () => {
-      const body = {
-        id: 5,
-        numberLine: 5,
-        numberColumn: 5,
-        header: 'Light',
-        format: 'centered',
-        style: 'time New Roman',
-        state: 'en rédaction',
-      };
-      
-      expect(await cu37AController.create(body)).toBe(200);
-    });
-  });*/
-
   describe('templates', () => {
     let app: INestApplication;
     let server;
-    //let templateServices = {
-    // getAllApproved: () => ['APPROVED'],
-    //  getAllInApprobation: () => ['INAPPROBATION'],
 
     beforeAll(async () => {
       const module = await Test.createTestingModule({
@@ -58,22 +30,89 @@ describe('CU37AController test', () => {
     it('should return created entity ', () => {
       return request(server)
         .post('/CU37ATemplate')
-        .expect(201, {
+        .send({
           numberLine: 6,
           numberColumn: 6,
           header: 'Light',
           format: 'centered',
           style: 'time New Roman',
-        });
+        })
+        .expect(201);
+    });
+
+    it('should not return created entity ', () => {
+      return request(server)
+        .post('/CU37ATemplate')
+        .send({ test })
+        .expect(201);
+    });
+
+    it('change state to in approbation', () => {
+      return request(server)
+        .put('/CU37ATemplate/toInApprobation/5')
+        .expect('wrong state ! Your state is  : APPROVED');
+    });
+
+    it('/Get all in approbation ', () => {
+      return request(server)
+        .get('/CU37ATemplate/InApprobation')
+        .expect([
+          {
+            id: 6,
+            numberLine: 5,
+            numberColumn: 5,
+            header: 'Light',
+            format: 'centered',
+            style: 'time New Roman',
+            state: 'INAPPROBATION',
+          },
+        ]);
+    });
+
+    it('change state to correction', () => {
+      return request(server)
+        .put('/CU37ATemplate/refuseTemplate/5')
+        .expect('wrong state ! Your state is  : APPROVED');
+    });
+
+    it('change state to approved', () => {
+      return request(server)
+        .put('/CU37ATemplate/ApproveTemplate/5')
+        .expect('wrong state ! Your state is  : APPROVED');
     });
 
     it('/Get all approved ', () => {
       return request(server)
         .get('/CU37ATemplate/Approved')
-        .expect(200)
-        .expect({
-          statusCode: 200,
-        });
+        .expect([
+          {
+            id: 5,
+            numberLine: 5,
+            numberColumn: 5,
+            header: 'Light',
+            format: 'centered',
+            style: 'time New Roman',
+            state: 'APPROVED',
+          },
+        ]);
+    });
+
+    it('change state to obsolete', () => {
+      return request(server)
+        .put('/CU37ATemplate/ApproveTemplate/5')
+        .expect('wrong state ! Your state is  : APPROVED');
+    });
+
+    it('change state to inRedaction', () => {
+      return request(server)
+        .put('/CU37ATemplate/ApproveTemplate/5')
+        .expect('wrong state ! Your state is  : APPROVED');
+    });
+
+    it('should generate report', () => {
+      return request(server)
+        .put('/CU37AReport/generateReport/')
+        .expect(200);
     });
 
     afterAll(async () => {

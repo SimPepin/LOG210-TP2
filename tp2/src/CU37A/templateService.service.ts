@@ -20,8 +20,6 @@ export class TemplateService {
   }
 
   async createTemplate(template: Template) {
-    console.log('ça passe ici');
-
     try {
       await getConnection()
         .createQueryBuilder()

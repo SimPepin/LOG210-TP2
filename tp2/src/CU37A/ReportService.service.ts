@@ -10,7 +10,7 @@ import { Service } from './Service.entity';
 export class ReportService {
   constructor(
     @InjectRepository(Report)
-    private ReportsRepository: Repository<Report>,
+    private ReportsRepository: Repository<any>,
   ) {}
 
   private async findReport(id: number) {
@@ -18,30 +18,33 @@ export class ReportService {
       .getRepository(Report)
       .findOne(id);
   }
-  async generateReport(
-    idReport: number,
-    idTemplate: number,
-    idService: number,
-    idObsNote: number,
-  ) {
-    const tmpTemplate = await getConnection()
+  async generateReport(report: Report) {
+    let idReport = report.id;
+
+    let template = await getConnection()
       .getRepository(Template)
-      .findOne(idTemplate);
-    const tmpService = await getConnection()
-      .getRepository(Service)
-      .findOne(idService);
-    const tmpObsNote = await getConnection()
+      .findOne(report.template);
+
+    let assoNote = await getConnection()
       .getRepository(ObservationNote)
-      .findOne(idObsNote);
+      .findOne(report.observationsNote);
+
+    let service = await getConnection()
+      .getRepository(Service)
+      .findOne(report.service);
+
     await getConnection()
       .getRepository(Report)
-      .update(idReport, { template: tmpTemplate });
-    await getConnection()
-      .getRepository(Report)
-      .update(idReport, { service: tmpService });
-    await getConnection()
-      .getRepository(Report)
-      .update(idReport, { observationsNote: tmpObsNote });
+      .createQueryBuilder()
+      .update()
+      .set({
+        coordinatorId: report.coordinatorId,
+        template: template,
+        service: service,
+        observationsNote: assoNote,
+      })
+      .whereInIds(idReport)
+      .execute();
 
     return await this.findReport(idReport);
   }
