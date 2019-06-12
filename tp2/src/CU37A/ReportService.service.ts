@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Report } from './Report.entity';
 import { InjectRepository, getConnectionName } from '@nestjs/typeorm';
-import { Repository, getConnection } from 'typeorm';
+import { Repository, getConnection, getRepository } from 'typeorm';
 import { Template } from './Template.entity';
 import { ObservationNote } from './ObservationNote.entity';
 import { Service } from './Service.entity';
@@ -10,13 +10,15 @@ import { Service } from './Service.entity';
 export class ReportService {
   constructor(
     @InjectRepository(Report)
-    private ReportsRepository: Repository<any>,
+    private ReportsRepository: Repository<Report>,
   ) {}
 
   private async findReport(id: number) {
     return await getConnection()
       .getRepository(Report)
-      .findOne(id);
+      .findOne(id, {
+        relations: ['template', 'service', 'observationsNote'],
+      });
   }
   async generateReport(report: Report) {
     let idReport = report.id;
@@ -44,8 +46,8 @@ export class ReportService {
         observationsNote: assoNote,
       })
       .whereInIds(idReport)
-      .execute();
-
+      .execute()
+      .then();
     return await this.findReport(idReport);
   }
 }
