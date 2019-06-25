@@ -49,8 +49,8 @@ describe('CU37AController test', () => {
 
     it('change state to in approbation', () => {
       return request(server)
-        .put('/CU37ATemplate/toInApprobation/5')
-        .expect('wrong state ! Your state is  : APPROVED');
+        .put('/CU37ATemplate/toInApprobation/32')
+        .expect('the template state have changed to : INAPPROBATION');
     });
 
     it('/Get all in approbation ', () => {
@@ -66,19 +66,28 @@ describe('CU37AController test', () => {
             style: 'time New Roman',
             state: 'INAPPROBATION',
           },
+          {
+            id: 32,
+            numberLine: 6,
+            numberColumn: 6,
+            header: 'Light',
+            format: 'centered',
+            style: 'time New Roman',
+            state: 'INAPPROBATION',
+          },
         ]);
     });
 
     it('change state to correction', () => {
       return request(server)
-        .put('/CU37ATemplate/refuseTemplate/5')
-        .expect('wrong state ! Your state is  : APPROVED');
+        .put('/CU37ATemplate/refuseTemplate/34')
+        .expect('the template state have changed to : INCORRECTION');
     });
 
     it('change state to approved', () => {
       return request(server)
-        .put('/CU37ATemplate/ApproveTemplate/5')
-        .expect('wrong state ! Your state is  : APPROVED');
+        .put('/CU37ATemplate/ApproveTemplate/33')
+        .expect('the template state have changed to : APPROVED');
     });
 
     it('/Get all approved ', () => {
@@ -94,18 +103,27 @@ describe('CU37AController test', () => {
             style: 'time New Roman',
             state: 'APPROVED',
           },
+          {
+            id: 32,
+            numberLine: 6,
+            numberColumn: 6,
+            header: 'Light',
+            format: 'centered',
+            style: 'time New Roman',
+            state: 'APPROVED',
+          },
         ]);
     });
 
     it('change state to obsolete', () => {
       return request(server)
         .put('/CU37ATemplate/ApproveTemplate/5')
-        .expect('wrong state ! Your state is  : APPROVED');
+        .expect('the template state have changed to : OBSOLETE');
     });
 
     it('change state to inRedaction', () => {
       return request(server)
-        .put('/CU37ATemplate/ApproveTemplate/5')
+        .put('/CU37ATemplate/ApproveTemplate/35')
         .expect('wrong state ! Your state is  : APPROVED');
     });
 
@@ -118,5 +136,29 @@ describe('CU37AController test', () => {
     afterAll(async () => {
       await app.close();
     });
+  });
+});
+
+describe('AppController (e2e)', () => {
+  let app;
+
+  beforeEach(async () => {
+    const moduleFixture: TestingModule = await Test.createTestingModule({
+      imports: [AppModule],
+    }).compile();
+
+    app = moduleFixture.createNestApplication();
+    await app.init();
+  });
+
+  it('/ (GET)', () => {
+    return request(app.getHttpServer())
+      .get('/')
+      .expect(200)
+      .expect('Hello World!');
+  });
+
+  afterAll(async () => {
+    await app.close();
   });
 });
