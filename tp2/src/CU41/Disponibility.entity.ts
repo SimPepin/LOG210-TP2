@@ -13,9 +13,9 @@ export class Disponibility {
   id: number;
 
   @Column()
-  begin: Date;
+  begin: string;
   @Column()
-  end: Date;
+  end: string;
   @Column()
   dayOfWeek: string;
 

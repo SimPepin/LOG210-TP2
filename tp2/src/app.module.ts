@@ -9,7 +9,7 @@ import { TimeWindowModule } from './CU41/TimeWindowmodule.module';
 import { VisitorModule } from './CU41/VisitorModule.module';
 
 @Module({
-  imports: [TypeOrmModule.forRoot(), TimeWindowModule, VisitorModule],
+  imports: [TypeOrmModule.forRoot(), VisitorModule],
   controllers: [AppController],
   providers: [AppService],
 })
