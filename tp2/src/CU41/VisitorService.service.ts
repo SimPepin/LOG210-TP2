@@ -13,6 +13,10 @@ export class VisitorService {
     private visitorRepository: Repository<Visitor>,
   ) {}
 
+  async getVisitorId(id: number) {
+    return getRepository(Visitor).findOne(id, { where: [{ visitorId: id }] });
+  }
+
   async getVisitorList() {
     return getRepository(Visitor).find();
   }
@@ -37,7 +41,6 @@ export class VisitorService {
       .execute();
 
     
-    console.log(timeWindowInfo.generatedMaps[0].id);
     return timeWindowInfo.generatedMaps[0].id;
   }
 }

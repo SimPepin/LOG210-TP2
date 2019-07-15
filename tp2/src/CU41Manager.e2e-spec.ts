@@ -85,6 +85,22 @@ describe('CU41Manager (e2e)', () => {
         .expect(201);
     });
 
+    it('should update disponibility', () => {
+      return request(server)
+        .put('/CU41Manager/changeDisponibility')
+        .send({
+          id: 5,
+          currentState: 'NOT AVAILABLE',
+        })
+        .expect(200);
+    });
+
+    it('should return 200 ok ', () => {
+      return request(server)
+        .get('/CU41Manager/GetInfo/?id1 = 1&id2=1')
+        .expect(200);
+    });
+
     afterAll(async () => {
       await app.close();
     });

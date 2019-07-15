@@ -43,4 +43,22 @@ export class TimeWindowService {
         where: [{ timeWindowId: id }],
       });
   }
+
+  async updateDisponibility(disponiblity: Disponibility) {
+    try {
+      console.log(
+        await getConnection()
+          .createQueryBuilder()
+          .update(Disponibility)
+          .set({
+            currentState: disponiblity.currentState,
+          })
+          .where('id = :id', { id: disponiblity.id })
+          .execute(),
+      );
+      return 200;
+    } catch {
+      return 500;
+    }
+  }
 }
