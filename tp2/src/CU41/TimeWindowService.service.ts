@@ -16,6 +16,7 @@ export class TimeWindowService {
     try {
       await getConnection()
         .createQueryBuilder()
+        .cache(true)
         .insert()
         .into(Disponibility)
         .values([
@@ -39,6 +40,7 @@ export class TimeWindowService {
     return getConnection()
       .getRepository(TimeWindow)
       .findOne(id, {
+        cache: true,
         relations: ['disponibilities'],
         where: [{ timeWindowId: id }],
       });
@@ -49,6 +51,7 @@ export class TimeWindowService {
       console.log(
         await getConnection()
           .createQueryBuilder()
+          .cache(true)
           .update(Disponibility)
           .set({
             currentState: disponiblity.currentState,

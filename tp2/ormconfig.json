@@ -7,5 +7,6 @@
   "database": "db",
   "entities": ["src/**/**.entity{.ts,.js}"],
   "synchronize": true,
-  "logging": false
+  "logging": false,
+  "cache": true
 }

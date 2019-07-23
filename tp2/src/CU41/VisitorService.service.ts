@@ -18,10 +18,11 @@ export class VisitorService {
   }
 
   async getVisitorList() {
-    return getRepository(Visitor).find();
+    return getRepository(Visitor).find({ cache: true });
   }
   async getvisitor(id: number) {
     return getRepository(Visitor).findOne(id, {
+      cache: true,
       relations: ['timeWindows'],
       where: [{ visitorId: id }],
     });
@@ -30,6 +31,7 @@ export class VisitorService {
   async createNewTimeWindow(timeWindow: TimeWindow, id: number) {
     let timeWindowInfo = await getConnection()
       .createQueryBuilder()
+      .cache(true)
       .insert()
       .into(TimeWindow)
       .values([
@@ -40,7 +42,6 @@ export class VisitorService {
       ])
       .execute();
 
-    
     return timeWindowInfo.generatedMaps[0].id;
   }
 }
